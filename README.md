@@ -46,7 +46,7 @@ The EDA phase focused on generating initial insights. The primary exploratory ac
   frameborder="0"
 ></iframe>
 
-The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the ~50k REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
+The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than 10 thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the ~50k REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot presents a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
 
 | `PC.REALGSP.STATE` | count | mean | median |
 |:-------------------|--------:|--------:|---------:|
@@ -70,7 +70,9 @@ States in the lower economic output categories tend to experience longer average
 
 ### NMAR Analysis
 
-The column `OUTAGE.RESTORATION.TIME` is hypothesized to be **Not Missing At Random (NMAR)**. The missingness is likely dependent on the value itself: long or complex outages that require tedious documentation procedures are harder for utility companies to record accurately. It is plausible that the reporting entities omit the restoration time altogether due to the complexity of the event. To investigate if this column is MAR instead of NMAR, one could collect report logs or utility company documentation protocols that could explain the missingness by factors other than the outage time itself.
+The column `OUTAGE.RESTORATION.TIME` is hypothesized to be **Not Missing At Random (NMAR)**. The missingness is likely dependent on the value itself: long or complex outages that require tedious documentation procedures are harder for utility companies to record accurately. It is plausible that the reporting entities omit the restoration time altogether due to the complexity of the event.
+
+* **Data to Test NMAR:** To investigate if this column is MAR instead of NMAR, one could collect **report logs** or **utility company documentation protocols** that could explain the missingness by factors other than the outage time itself.
 
 ### Missingness Dependency: Investigating MAR
 
@@ -85,7 +87,12 @@ We conducted two permutation tests to determine if the missingness of the `RES.P
   frameborder="0"
 ></iframe>
 
-In the first test, we examined whether the missingness of `RES.PRICE` depended on `CUSTOMERS.AFFECTED`. The observed difference was -94,819, indicating that outages with missing price data affected fewer customers on average. The resulting p-value was 0.329, which is greater than 0.05. Therefore, we fail to reject the null hypothesis, and the missingness of `RES.PRICE` is not statistically associated with the number of customers affected by the outage.
+| Component | Result |
+| :--- | :--- |
+| **Observed Difference** | -94,819 (Outages with missing price data affected fewer customers on average). |
+| **P-value** | 0.329 |
+
+**Conclusion:** Since p=0.329 is greater than 0.05, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
 
 #### Test 2: Dependency on `YEAR`
 
@@ -96,13 +103,29 @@ In the first test, we examined whether the missingness of `RES.PRICE` depended o
   frameborder="0"
 ></iframe>
 
-The second test examined whether the missingness of `RES.PRICE` depended on the `YEAR` of the outage. The observed difference was 6.907 years, indicating that outages with missing price data occurred approximately 6.9 years later on average. The p-value was 0.000, which is statistically significant. Therefore, we reject the null hypothesis. This finding suggests that `RES.PRICE` is Missing At Random (MAR), as the likelihood of price data being missing depends on the observed variable `YEAR`. The accompanying visualization confirms this, showing that the percentage of missing `RES.PRICE` data increases sharply in later years of the dataset (post-2010).
+| Component | Result |
+| :--- | :--- |
+| **Observed Difference** | 6.907 years (Outages with missing price data occurred ~6.9 years later on average). |
+| **P-value** | 0.000 |
+
+**Conclusion:** With p=0.000, we **reject the null hypothesis**. There is a statistically significant difference between `YEAR` and `RES.PRICE` missingness. This finding suggests that `RES.PRICE` is **Missing At Random (MAR)**, where the likelihood of price data being missing depends on the observed variable `YEAR`.
+
+**Visualization of Dependency:**
+
+<iframe
+  src="assets/res_price_missing_by_year.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The plot confirms the dependency, showing that the percentage of missing `RES.PRICE` data increases sharply in the later years of the dataset (post-2010).
 
 ---
 
 ## Hypothesis Testing
 
-The key question was whether outage duration is greater on average for low-GSP states compared to high-GSP states.
+**Question:** Is the outage duration greater on average for low-GSP states compared to high-GSP states?
 
 <iframe
   src="assets/perm_gsp.html"
@@ -111,7 +134,12 @@ The key question was whether outage duration is greater on average for low-GSP s
   frameborder="0"
 ></iframe>
 
-The observed difference in means between low and high GSP states was 1033.38 minutes, and the p-value was 0.002. This p-value is well below the 0.05 threshold, allowing us to reject the null hypothesis. Therefore, there is strong statistical evidence that states with lower economic output experience longer average power outages.
+| Component | Result | Conclusion |
+| :--- | :--- | :--- |
+| **Test Statistic** | Difference in Means (Low GSP - High GSP) | 1033.38 minutes |
+| **P-value** | 0.002 | **Reject H0** (Statistically Significant) |
+
+With a p-value well below the 0.05 threshold, we **reject the null hypothesis**. There is strong statistical evidence that states with lower economic output experience longer average power outages.
 
 ---
 
@@ -119,22 +147,60 @@ The observed difference in means between low and high GSP states was 1033.38 min
 
 ### Framing the Prediction Problem
 
-The prediction task was framed as a binary classification problem, predicting `LONG_OUTAGE` (outage > 620 minutes) versus short outages (≤ 620 minutes). Accuracy was chosen as the evaluation metric because the response variable was engineered to be roughly balanced (50/50).
+* **Prediction Task:** Binary Classification—predicting `LONG_OUTAGE` (outage > 620 minutes) vs. Short Outage (outage ≤ 620 minutes).
+* **Evaluation Metric:** Accuracy. Chosen because the response variable was engineered to be roughly balanced (50/50).
 
 ### Baseline Model (Logistic Regression)
 
-The baseline model used `LogisticRegression` with features `PC.REALGSP.STATE` and `U.S._STATE`. This model achieved an accuracy of 0.597, providing a benchmark for subsequent models.
+| Component | Detail | Performance |
+| :--- | :--- | :--- |
+| **Model** | `LogisticRegression` | Accuracy: 0.597 |
+| **Features** | `PC.REALGSP.STATE`, `U.S._STATE` | |
 
 ### Final Model (Random Forest)
 
-To significantly improve prediction accuracy, we implemented a `RandomForestClassifier` and introduced two highly predictive features. The first feature, `CAUSE.CATEGORY`, serves as a direct predictor of repair complexity. The second feature, `CUST_PER_GSP` (customers affected divided by total GSP), measures the scale of the outage relative to the state's economic capacity. GridSearchCV was used for hyperparameter optimization, and the best hyperparameters found were `max_depth = 5` and `n_estimators = 100`. The final model achieved a test accuracy of 0.791, representing a significant improvement over the baseline. 
+To significantly improve prediction accuracy, we moved to an ensemble method and introduced new, highly predictive features. 
 
-[Image of Decision Tree structure]
+
+| Component | Detail | Performance |
+| :--- | :--- | :--- |
+| **Model** | `RandomForestClassifier` (optimized) | Test Accuracy: 0.791 |
+| **Tuning** | GridSearchCV used for hyperparameter selection | |
+| **Features Added** | 1. `CAUSE.CATEGORY`: Direct predictor of repair complexity. 2. `CUST_PER_GSP`: (Customers Affected / Total GSP) measures outage scale relative to state economic capacity | |
+| **Best Hyperparameters** | `max_depth`: 5, `n_estimators`: 100 | |
+
+The Final Model achieved a test accuracy of 0.791, representing a significant improvement over the 0.597 Baseline, validating the new features and the non-linear model choice.
 
 ---
 
 ## Fairness Analysis
 
-We also assessed whether the final model's accuracy was fair with respect to economic output using a permutation test. Group X included lower GSP states (below the median), and Group Y included higher GSP states (at or above the median). The null hypothesis stated that the model is fair, meaning the true accuracy for lower GSP states is the same as for higher GSP states. The alternative hypothesis stated that the model is unfair, with different true accuracies for the two groups.
+We assessed whether the Final Model's accuracy was fair with respect to economic output using a permutation test.
 
-The permutation test results showed that Group X had an accuracy of 0.851, while Group Y had an accuracy of 0.723. The observed difference (AccX - AccY) was 0.128, and the p-value was 0.092. Since this p-value is greater than the 0.05 significance level, we fail to reject the null hypothesis. Although the model shows a 12.8% higher accuracy for lower GSP states, the difference is not statistically significant. Therefore, there is insufficient evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
+### 1. Hypotheses
+
+* **Groups:** Group X (Lower GSP States, below median) and Group Y (Higher GSP States, at or above median).  
+* **Null Hypothesis (H0):** The model is fair. The true accuracy for Lower GSP states (μX) is the same as for Higher GSP states (μY).  
+* **Alternative Hypothesis (HA):** The model is unfair. The true accuracy for the two groups is different (μX ≠ μY).
+
+### 2. Permutation Test Results
+
+<iframe
+  src="assets/fairness_perm_test.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+| Component | Value |
+| :--- | :--- |
+| **Accuracy (Group X - Lower GSP)** | 0.851 |
+| **Accuracy (Group Y - Higher GSP)** | 0.723 |
+| **Observed Difference (AccX - AccY)** | 0.128 |
+| **P-value** | 0.092 |
+
+### 3. Conclusion
+
+Using a significance level of 0.05, the p-value (0.092) is greater than 0.05. We **fail to reject the null hypothesis**.  
+
+Although the model shows a large observed disparity (it is 12.8% more accurate for Lower GSP states), the permutation test indicates that this difference is **not statistically significant**. We do not have sufficient statistical evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
