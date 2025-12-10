@@ -60,6 +60,47 @@ States in the lower economic output categories tend to experience longer average
 ---
 ## Assessment of Missingness
 
+### NMAR Analysis
+
+The column **`OUTAGE.RESTORATION.TIME`** is hypothesized to be **Not Missing At Random (NMAR)**. The missingness is likely dependent on the value itself: long or complex outages that require tedious documentation procedures are harder for utility companies to record accurately. It is plausible that the reporting entities omit the restoration time altogether due to the complexity of the event.
+
+* **Data to Test NMAR:** To investigate if this column is MAR instead of NMAR, one could collect **report logs** or **utility company documentation protocols** that could explain the missingness by factors other than the outage time itself.
+
+### Missingness Dependency: Investigating MAR
+
+We conducted two permutation tests to determine if the missingness of the **`RES.PRICE`** column is dependent on other observed variables.
+
+#### Test 1: Dependency on `CUSTOMERS.AFFECTED`
+
+| Component | Result |
+| :--- | :--- |
+| **Observed Difference** | $-94,819$ (Outages with missing price data affected fewer customers on average). |
+| **P-value** | $0.329$ |
+
+**Conclusion:** Since $p=0.329$ is greater than $\alpha=0.05$, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
+
+#### Test 2: Dependency on `YEAR`
+
+| Component | Result |
+| :--- | :--- |
+| **Observed Difference** | $6.907$ years (Outages with missing price data occurred $\sim 6.9$ years later on average). |
+| **P-value** | $0.000$ |
+
+**Conclusion:** With $p=0.000$, we **reject the null hypothesis**. There is a statistically significant difference between `YEAR` and `RES.PRICE` missingness. This finding suggests that `RES.PRICE` is **Missing At Random (MAR)**, where the likelihood of price data being missing depends on the observed variable **`YEAR`**.
+
+**Visualization of Dependency:**
+
+<iframe
+  src="assets/res_price_missing_by_year.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The plot confirms the dependency, showing that the percentage of missing `RES.PRICE` data increases sharply in the later years of the dataset (post-2010).
+
+---
+
 ## Hypothesis Testing
 
 **Question:** Is the outage duration greater on average for low-GSP states compared to high-GSP states?
