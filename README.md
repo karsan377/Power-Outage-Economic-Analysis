@@ -45,7 +45,20 @@ The EDA phase focused on generating initial insights. The primary exploratory ac
   height="600"
   frameborder="0"
 ></iframe>
+
+The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the ~50k REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
+
+| PC.REALGSP.STATE   |   count |    mean |   median |
+|:-------------------|--------:|--------:|---------:|
+| Low                |     174 | 3013.05 |   1066.5 |
+| Medium-Low         |     173 | 2867.64 |    960   |
+| Medium-High        |     174 | 2140.81 |    709   |
+| High               |     172 | 1670.82 |    202.5 |
+
+
+States in the lower economic output categories tend to experience longer average outage durations compared to states in higher economic categories. This suggests a possible relationship between lower GSP and weaker grid reliability. Another point of curiosity is the fact that the differences in means across categories are much larger than the differences in medians. This indicates that the distributions are heavily right-skewed and that extreme long duration outages (not missing or zero values) are likely inflating the means. We will explore this further in the missingness section.
 ---
+## Assessment of Missingness
 
 ## Hypothesis Testing
 
