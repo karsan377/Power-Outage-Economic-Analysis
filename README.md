@@ -79,8 +79,8 @@ We conducted two permutation tests to determine if the missingness of the **`RES
 
 | Component | Result |
 | :--- | :--- |
-| **Observed Difference** | $-94,819$ (Outages with missing price data affected fewer customers on average). |
-| **P-value** | $0.329$ |
+| **Observed Difference** | -94,819 (Outages with missing price data affected fewer customers on average). |
+| **P-value** | 0.329 |
 
 **Conclusion:** Since $p=0.329$ is greater than $0.05$, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
 
@@ -88,8 +88,8 @@ We conducted two permutation tests to determine if the missingness of the **`RES
 
 | Component | Result |
 | :--- | :--- |
-| **Observed Difference** | $6.907$ years (Outages with missing price data occurred $\sim 6.9$ years later on average). |
-| **P-value** | $0.000$ |
+| **Observed Difference** | 6.907 years (Outages with missing price data occurred ~6.9 years later on average). |
+| **P-value** | 0.000 |
 
 **Conclusion:** With $p=0.000$, we **reject the null hypothesis**. There is a statistically significant difference between `YEAR` and `RES.PRICE` missingness. This finding suggests that `RES.PRICE` is **Missing At Random (MAR)**, where the likelihood of price data being missing depends on the observed variable **`YEAR`**.
 
@@ -112,8 +112,8 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 
 | Component | Result | Conclusion |
 | :--- | :--- | :--- |
-| **Test Statistic** | Difference in Means (Low GSP - High GSP) | $1033.38$ minutes |
-| **P-value** | $0.002$ | **Reject $H_0$** (Statistically Significant) |
+| **Test Statistic** | Difference in Means (Low GSP - High GSP) | 1033.38 minutes |
+| **P-value** | 0.002 | **Reject $H_0$** (Statistically Significant) |
 
 * **Conclusion:** With a **p-value well below the 0.05 threshold**, we **reject the null hypothesis**. There is **strong statistical evidence** that states with lower economic output experience longer average power outages.
 
@@ -130,7 +130,7 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 
 | Component | Detail | Performance |
 | :--- | :--- | :--- |
-| **Model** | `LogisticRegression` | **Accuracy: $0.597$** |
+| **Model** | `LogisticRegression` | **Accuracy: 0.597** |
 | **Features** | `PC.REALGSP.STATE`, `U.S._STATE` | |
 
 ### Final Model (Random Forest)
@@ -145,12 +145,12 @@ To significantly improve prediction accuracy, we moved to an ensemble method and
 
 | Component | Detail | Performance |
 | :--- | :--- | :--- |
-| **Model** | `RandomForestClassifier` (optimized) | **Test Accuracy: $0.791$** |
+| **Model** | `RandomForestClassifier` (optimized) | **Test Accuracy: 0.791** |
 | **Tuning** | `GridSearchCV` used for hyperparameter selection. | |
 | **Features Added** | **1. `CAUSE.CATEGORY`**: Direct predictor of repair complexity. **2. `CUST_PER_GSP`**: (Customers Affected / Total GSP) measures outage scale relative to state economic capacity. | |
 | **Best Hyperparameters** | `max_depth`: 5, `n_estimators`: 100 | |
 
-The Final Model achieved a test accuracy of **$0.791$**, representing a significant improvement over the $0.597$ Baseline, validating the new features and the non-linear model choice.
+The Final Model achieved a test accuracy of **0.791**, representing a significant improvement over the 0.597 Baseline, validating the new features and the non-linear model choice.
 
 ---
 
@@ -168,15 +168,15 @@ We assessed whether the Final Model's accuracy was fair with respect to economic
 
 | Component | Value |
 | :--- | :--- |
-| **Accuracy (Group X - Lower GSP)** | $0.851$ |
-| **Accuracy (Group Y - Higher GSP)** | $0.723$ |
-| **Observed Difference (AccX - AccY)** | $0.128$ |
-| **P-value** | $0.092$ |
+| **Accuracy (Group X - Lower GSP)** | 0.851 |
+| **Accuracy (Group Y - Higher GSP)** | 0.723 |
+| **Observed Difference (AccX - AccY)** | 0.128 |
+| **P-value** | 0.092 |
 
 ### 3. Conclusion
 
 Using a significance level of **0.05**, the **p-value (0.092) is greater than 0.05**. We **fail to reject the null hypothesis**.
 
-Although the model shows a large observed disparity (it is $12.8\%$ more accurate for Lower GSP states), the permutation test indicates that this difference is **not statistically significant**. We do not have sufficient statistical evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
+Although the model shows a large observed disparity (it is 12.8% more accurate for Lower GSP states), the permutation test indicates that this difference is **not statistically significant**. We do not have sufficient statistical evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
 
 ***
