@@ -1,26 +1,13 @@
 # Power-Outage-Economic-Analysis
 DSC 80 Final Project by Karthik Sankaran
 
-Skip to the content.
-
-# ⚡ Analyzing Power Outages and Economic Resilience
-
-Project for DSC 80 at UCSD
-
----
-
-### View on GitHub
-[Link to your GitHub repository]
-
-### Analyzing Power Outages and Economic Output
-Project for DSC 80 at UCSD
-By [Your Name]
-
 ## Introduction
 
-In this project, I examined a data set of **major power outages in the U.S. from January 2000 to July 2016**. These outages, defined by the Department of Energy, impacted at least 50,000 customers or caused substantial demand loss. The data, sourced from Purdue University, includes detailed information on the outages, state demographics, climate, and **economic characteristics**.
+This project revolves around power outage data provided by Purdue University from 2000 to 2016. Each row represents a distinct outage for a given state. For each outage information about cause, location, timing, and economic and demographic context is also available. Given this information, the question I am considering is:
 
-My core research question was: **Is there a relationship between a state's economic output (GSP) and its susceptibility to long-duration power outages?** The project culminates in a model predicting the risk of a "Long Outage" and an analysis of model fairness with respect to state economic output.
+What relationship do state economies share with power outages in the U.S.? Specifically, do states with lower economic output (lower real GSP column) experience more frequent or longer power outages compared to states with higher economic output?
+
+This question matters because economic conditions may influence grid investment, infrastructure quality, and resilience.
 
 The original raw DataFrame contained 1534 rows and 57 columns. The primary columns used for analysis are listed below:
 
@@ -39,15 +26,25 @@ The original raw DataFrame contained 1534 rows and 57 columns. The primary colum
 
 ### Cleaning
 
-Key cleaning steps included:
-1.  Handling $0$ values in `OUTAGE.DURATION`, `CUSTOMERS.AFFECTED`, and `DEMAND.LOSS.MW` by replacing them with **`np.nan`**, as a major outage cannot have zero impact.
-2.  Creating the response variable: **`LONG_OUTAGE`** (1 if `OUTAGE.DURATION` > median duration, 0 otherwise).
-3.  Imputing missing values in economic columns (`TOTAL.REALGSP`, `CUSTOMERS.AFFECTED`) using the **median** before feature engineering.
+The cleaning phase focused on transforming and preparing the data for analysis. The most critical step involved handling implausible values: zero values in the severity metrics—OUTAGE.DURATION, CUSTOMERS.AFFECTED, and DEMAND.LOSS.MW—were replaced with np.nan, as a major outage cannot logically have zero impact. Next, the binary response variable, LONG_OUTAGE, was created, set to 1 if the OUTAGE.DURATION was greater than the overall median duration, and 0 otherwise. Finally, to ensure features were complete for subsequent engineering and modeling, missing values in the economic columns used for prediction (TOTAL.REALGSP and CUSTOMERS.AFFECTED) were imputed using the median of each respective column.
 
 ### Exploratory Data Analysis
 
-* **Initial Aggregation (GSP vs. Duration):** Initial grouping of states by GSP quartile revealed that states in the **Lower GSP quartiles had longer median outage durations** compared to those in the Higher GSP quartiles. This observation formed the basis for the formal Hypothesis Test.
+The EDA phase focused on generating initial insights. The primary exploratory action was an Initial Aggregation where states were explicitly divided into four GSP quartiles (Low, Medium-Low, Medium-High, High) based on the distribution of their PC.REALGSP.STATE. By grouping the data using these bins and calculating the mean and median OUTAGE.DURATION for each, a significant observation was made: states in the Lower GSP quartiles had longer median outage durations compared to those in the Higher GSP quartiles. This clear pattern showing that a state's economic output correlates with the severity of its power outages directly supported the decision to formulate and run the subsequent formal Hypothesis Test.
 
+<iframe
+  src="assets/outage_duration_histogram.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+<iframe
+  src="assets/gsp_vs_duration_scatter.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 ---
 
 ## Hypothesis Testing
