@@ -47,7 +47,7 @@ The EDA phase focused on generating initial insights. The primary exploratory ac
 ></iframe>
 
 <p style="font-weight: normal;">
-The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the $\sim\$50\text{k}$ REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
+The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the ~50k REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
 </p>
 
 | PC.REALGSP.STATE |   count |    mean |   median |
@@ -82,7 +82,7 @@ We conducted two permutation tests to determine if the missingness of the **`RES
 | **Observed Difference** | $-94,819$ (Outages with missing price data affected fewer customers on average). |
 | **P-value** | $0.329$ |
 
-**Conclusion:** Since $p=0.329$ is greater than $\alpha=0.05$, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
+**Conclusion:** Since $p=0.329$ is greater than $0.05$, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
 
 #### Test 2: Dependency on `YEAR`
 
@@ -115,7 +115,7 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 | **Test Statistic** | Difference in Means (Low GSP - High GSP) | $1033.38$ minutes |
 | **P-value** | $0.002$ | **Reject $H_0$** (Statistically Significant) |
 
-* **Conclusion:** With a $p$-value well below the $\alpha=0.05$ threshold, we **reject the null hypothesis**. There is **strong statistical evidence** that states with lower economic output experience longer average power outages.
+* **Conclusion:** With a **p-value well below the 0.05 threshold**, we **reject the null hypothesis**. There is **strong statistical evidence** that states with lower economic output experience longer average power outages.
 
 ---
 
@@ -123,8 +123,8 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 
 ### Framing the Prediction Problem
 
-* **Prediction Task:** **Binary Classification**—predicting **`LONG_OUTAGE`** (outage $> 620$ minutes) vs. Short Outage (outage $\leq 620$ minutes).
-* **Evaluation Metric:** **Accuracy**. Chosen because the response variable was engineered to be roughly balanced ($50/50$).
+* **Prediction Task:** **Binary Classification**—predicting **`LONG_OUTAGE`** (outage > 620 minutes) vs. Short Outage (outage $\leq 620$ minutes).
+* **Evaluation Metric:** **Accuracy**. Chosen because the response variable was engineered to be roughly balanced (50/50).
 
 ### Baseline Model (Logistic Regression)
 
@@ -161,8 +161,8 @@ We assessed whether the Final Model's accuracy was fair with respect to economic
 ### 1. Hypotheses
 
 * **Groups:** Group X (Lower GSP States, below median) and Group Y (Higher GSP States, at or above median).
-* **Null Hypothesis ($H_0$):** The model is fair. The true accuracy for Lower GSP states ($\mu_X$) is the same as for Higher GSP states ($\mu_Y$).
-* **Alternative Hypothesis ($H_A$):** The model is unfair. The true accuracy for the two groups is different ($\mu_X \neq \mu_Y$).
+* **Null Hypothesis (H0):** The model is fair. The true accuracy for Lower GSP states (μX) is the same as for Higher GSP states (μY).
+* **Alternative Hypothesis (HA):** The model is unfair. The true accuracy for the two groups is different (μX ≠ μY).
 
 ### 2. Permutation Test Results
 
@@ -170,12 +170,12 @@ We assessed whether the Final Model's accuracy was fair with respect to economic
 | :--- | :--- |
 | **Accuracy (Group X - Lower GSP)** | $0.851$ |
 | **Accuracy (Group Y - Higher GSP)** | $0.723$ |
-| **Observed Difference ($\text{Acc}_X - \text{Acc}_Y$)** | $0.128$ |
+| **Observed Difference (AccX - AccY)** | $0.128$ |
 | **P-value** | $0.092$ |
 
 ### 3. Conclusion
 
-Using a significance level of $\alpha=0.05$, the $p$-value ($0.092$) is **greater than $0.05$**. We **fail to reject the null hypothesis**.
+Using a significance level of **0.05**, the **p-value (0.092) is greater than 0.05**. We **fail to reject the null hypothesis**.
 
 Although the model shows a large observed disparity (it is $12.8\%$ more accurate for Lower GSP states), the permutation test indicates that this difference is **not statistically significant**. We do not have sufficient statistical evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
 
