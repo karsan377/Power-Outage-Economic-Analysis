@@ -26,7 +26,7 @@ The original raw DataFrame contained 1534 rows and 57 columns. The primary colum
 
 ### Cleaning
 
-The cleaning phase focused on transforming and preparing the data for analysis. The most critical step involved handling implausible values: zero values in the severity metrics—OUTAGE.DURATION, CUSTOMERS.AFFECTED, and DEMAND.LOSS.MW—were replaced with np.nan, as a major outage cannot logically have zero impact. Next, the binary response variable, LONG_OUTAGE, was created, set to 1 if the OUTAGE.DURATION was greater than the overall median duration, and 0 otherwise. Finally, to ensure features were complete for subsequent engineering and modeling, missing values in the economic columns used for prediction (TOTAL.REALGSP and CUSTOMERS.AFFECTED) were imputed using the median of each respective column.
+The cleaning phase focused on transforming and preparing the data for analysis. The most critical step involved handling implausible values: zero values in the severity metrics—**OUTAGE.DURATION**, **CUSTOMERS.AFFECTED**, and **DEMAND.LOSS.MW**—were replaced with **np.nan**, as a major outage cannot logically have zero impact. Next, the binary response variable, **LONG\_OUTAGE**, was created, set to 1 if the OUTAGE.DURATION was greater than the overall median duration, and 0 otherwise. Finally, to ensure features were complete for subsequent engineering and modeling, missing values in the economic columns used for prediction (**TOTAL.REALGSP** and **CUSTOMERS.AFFECTED**) were imputed using the median of each respective column.
 
 ### Exploratory Data Analysis
 
@@ -46,19 +46,24 @@ The EDA phase focused on generating initial insights. The primary exploratory ac
   frameborder="0"
 ></iframe>
 
-The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the ~50k REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
+<p style="font-weight: normal;">
+The first graph depicts the distribution of outage durations across all recorded outages. From this graph, it is evident that most outages last for little; that is, the overwhelming majority (pre-imputation and missingness analysis) last for less than a few thousand minutes, with only a small number extending into the extreme range. The scatter plot represents outage durations across multiple states. The graph shows that most states are clustered around the $\sim\$50\text{k}$ REAL GSP per capita mark on the x-axis, since many states have similar economic output, but outage durations themselves vary widely. This plot does not reflect a unimodal distribution; rather, it shows that outage duration does not clearly increase or decrease with state economic output.
+</p>
 
-| PC.REALGSP.STATE   |   count |    mean |   median |
+| PC.REALGSP.STATE |   count |    mean |   median |
 |:-------------------|--------:|--------:|---------:|
 | Low                |     174 | 3013.05 |   1066.5 |
 | Medium-Low         |     173 | 2867.64 |    960   |
 | Medium-High        |     174 | 2140.81 |    709   |
 | High               |     172 | 1670.82 |    202.5 |
 
-
+<p style="font-weight: normal;">
 States in the lower economic output categories tend to experience longer average outage durations compared to states in higher economic categories. This suggests a possible relationship between lower GSP and weaker grid reliability. Another point of curiosity is the fact that the differences in means across categories are much larger than the differences in medians. This indicates that the distributions are heavily right-skewed and that extreme long duration outages (not missing or zero values) are likely inflating the means. We will explore this further in the missingness section.
+</p>
+
 ---
-## Assessment of Missingness
+
+## Assessment of Missingness 🕵️‍♀️
 
 ### NMAR Analysis
 
@@ -118,8 +123,8 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 
 ### Framing the Prediction Problem
 
-* **Prediction Task:** **Binary Classification**—predicting **`LONG_OUTAGE`** (outage > 620 minutes) vs. Short Outage (outage $\leq 620$ minutes).
-* **Evaluation Metric:** **Accuracy**. Chosen because the response variable was engineered to be roughly balanced (50/50).
+* **Prediction Task:** **Binary Classification**—predicting **`LONG_OUTAGE`** (outage $> 620$ minutes) vs. Short Outage (outage $\leq 620$ minutes).
+* **Evaluation Metric:** **Accuracy**. Chosen because the response variable was engineered to be roughly balanced ($50/50$).
 
 ### Baseline Model (Logistic Regression)
 
@@ -132,14 +137,17 @@ The plot confirms the dependency, showing that the percentage of missing `RES.PR
 
 To significantly improve prediction accuracy, we moved to an ensemble method and introduced new, highly predictive features. 
 
+
+
 [Image of Decision Tree structure]
+
 
 
 | Component | Detail | Performance |
 | :--- | :--- | :--- |
 | **Model** | `RandomForestClassifier` (optimized) | **Test Accuracy: $0.791$** |
 | **Tuning** | `GridSearchCV` used for hyperparameter selection. | |
-| **Features Added** | **1. `CAUSE.CATEGORY`**: Direct predictor of repair complexity. **2. `CUST_PER_GSP`**: (Customers Affected / Total GSP) - measures outage scale relative to state economic capacity. | |
+| **Features Added** | **1. `CAUSE.CATEGORY`**: Direct predictor of repair complexity. **2. `CUST_PER_GSP`**: (Customers Affected / Total GSP) measures outage scale relative to state economic capacity. | |
 | **Best Hyperparameters** | `max_depth`: 5, `n_estimators`: 100 | |
 
 The Final Model achieved a test accuracy of **$0.791$**, representing a significant improvement over the $0.597$ Baseline, validating the new features and the non-linear model choice.
@@ -172,6 +180,3 @@ Using a significance level of $\alpha=0.05$, the $p$-value ($0.092$) is **greate
 Although the model shows a large observed disparity (it is $12.8\%$ more accurate for Lower GSP states), the permutation test indicates that this difference is **not statistically significant**. We do not have sufficient statistical evidence to conclude that the model is fundamentally unfair with respect to the state's economic output.
 
 ***
-
-
-
