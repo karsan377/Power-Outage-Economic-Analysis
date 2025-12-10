@@ -63,7 +63,13 @@ States in the lower economic output categories tend to experience longer average
 
 ---
 
-## Assessment of Missingness 🕵️‍♀️
+## Assessment of Missingness 
+<iframe
+  src="assets/missingness_count_bar.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 ### NMAR Analysis
 
@@ -77,19 +83,37 @@ We conducted two permutation tests to determine if the missingness of the **`RES
 
 #### Test 1: Dependency on `CUSTOMERS.AFFECTED`
 
+<iframe
+  src="assets/perm_customers.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
 | Component | Result |
 | :--- | :--- |
 | **Observed Difference** | -94,819 (Outages with missing price data affected fewer customers on average). |
 | **P-value** | 0.329 |
 
+
+
+
 **Conclusion:** Since $p=0.329$ is greater than $0.05$, we **fail to reject the null hypothesis**. The missingness of `RES.PRICE` is **not statistically associated** with the number of customers affected by the outage.
 
 #### Test 2: Dependency on `YEAR`
+<iframe
+  src="assets/perm_year.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 | Component | Result |
 | :--- | :--- |
 | **Observed Difference** | 6.907 years (Outages with missing price data occurred ~6.9 years later on average). |
 | **P-value** | 0.000 |
+
+
 
 **Conclusion:** With $p=0.000$, we **reject the null hypothesis**. There is a statistically significant difference between `YEAR` and `RES.PRICE` missingness. This finding suggests that `RES.PRICE` is **Missing At Random (MAR)**, where the likelihood of price data being missing depends on the observed variable **`YEAR`**.
 
@@ -103,12 +127,18 @@ We conducted two permutation tests to determine if the missingness of the **`RES
 ></iframe>
 
 The plot confirms the dependency, showing that the percentage of missing `RES.PRICE` data increases sharply in the later years of the dataset (post-2010).
-
 ---
 
 ## Hypothesis Testing
 
 **Question:** Is the outage duration greater on average for low-GSP states compared to high-GSP states?
+
+<iframe
+  src="assets/perm_gsp.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 | Component | Result | Conclusion |
 | :--- | :--- | :--- |
@@ -165,6 +195,12 @@ We assessed whether the Final Model's accuracy was fair with respect to economic
 * **Alternative Hypothesis (HA):** The model is unfair. The true accuracy for the two groups is different (μX ≠ μY).
 
 ### 2. Permutation Test Results
+<iframe
+  src="assets/fairness_perm_test.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
 
 | Component | Value |
 | :--- | :--- |
