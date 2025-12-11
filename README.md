@@ -26,7 +26,7 @@ The original raw DataFrame contained 1534 rows and 57 columns. The primary colum
 
 ### Cleaning
 
-The cleaning phase focused on transforming and preparing the data for analysis. The most critical step involved handling implausible values: zero values in the severity metrics—`OUTAGE.DURATION`, `CUSTOMERS.AFFECTED`, and `DEMAND.LOSS.MW` were replaced with `np.nan`, as a major outage cannot logically have zero impact. Next, the binary response variable, `LONG_OUTAGE`, was created, set to 1 if the `OUTAGE.DURATION` was greater than the overall median duration, and 0 otherwise. Finally, to ensure features were complete for subsequent engineering and modeling, missing values in the economic columns used for prediction (`TOTAL.REALGSP` and `CUSTOMERS.AFFECTED`) were imputed using the median of each respective column.
+The cleaning phase focused on transforming and preparing the data for analysis. The most critical step involved handling implausible values: zero values in the severity metrics `OUTAGE.DURATION`, `CUSTOMERS.AFFECTED`, and `DEMAND.LOSS.MW` were replaced with `np.nan`, as a major outage can't have zero impact. Next, the binary response variable, `LONG_OUTAGE`, was created, and was set to 1 if the `OUTAGE.DURATION` was greater than the overall median duration, and 0 otherwise. Finally, to ensure features were complete for subsequent engineering and modeling, missing values in the economic columns used for prediction (`TOTAL.REALGSP` and `CUSTOMERS.AFFECTED`) were imputed using the median of each respective column.
 
 ### Exploratory Data Analysis
 
@@ -171,7 +171,7 @@ The baseline model, which employed logistic regression, achieved an accuracy of 
 | **Features Added** | 1. `CAUSE.CATEGORY`: Direct predictor of repair complexity. 2. `CUST_PER_GSP`: (Customers Affected / Total GSP) measures outage scale relative to state economic capacity | |
 | **Best Hyperparameters** | `max_depth`: 5, `n_estimators`: 100 | |
 
-The final model incorporated two highly informative features. First, CAUSE.CATEGORY represents the type of outage, which is strongly associated with repair complexity and duration. Second, CUST_PER_GSP is an interaction feature calculated as the number of customers affected divided by the state’s total economic output (GSP). This feature captures the scale of the outage relative to the state’s economic capacity, providing a more context. Hyperparameter optimization using GridSearchCV identified the best model as a Random Forest with 100 trees and a maximum depth of 5. On the test set, this final model achieved an accuracy of 0.791, representing a substantial improvement over the baseline as expected.
+The final model incorporated two highly informative features. First, CAUSE.CATEGORY represents the type of outage, which is strongly associated with repair complexity and duration. Second, CUST_PER_GSP is a feature calculated as the number of customers affected divided by the state’s total economic output (GSP). This feature captures the scale of the outage relative to the state’s economic capacity, providing a more context. Hyperparameter optimization using GridSearchCV identified the best model as a Random Forest with 100 trees and a maximum depth of 5. On the test set, this final model achieved an accuracy of 0.791, representing a substantial improvement over the baseline as expected.
 
 ---
 
