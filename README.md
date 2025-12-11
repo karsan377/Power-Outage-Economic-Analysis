@@ -63,8 +63,8 @@ The first graph depicts the distribution of outage durations across all recorded
 
 <iframe
   src="assets/missingness_count_bar.html"
-  width="800"
-  height="600"
+  width="1400"
+  height="900"
   frameborder="0"
 ></iframe>
 
