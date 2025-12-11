@@ -147,7 +147,7 @@ With a p-value well below the 0.05 threshold, we **reject the null hypothesis**.
 
 ### Framing the Prediction Problem
 
-The prediction task will be binary classification where the model will predict if a given outage is `LONG_OUTAGE` (outage > 620 minutes) vs. Short Outage (outage ≤ 620 minutes). The chosen evaluation metric is accuracy because it is intuitive but also because the variable was engineered to be roughly balanced (50/50).
+The prediction task will be binary classification where the model will predict if a given outage is `LONG_OUTAGE` (outage > 620 minutes) vs. Short Outage (outage ≤ 620 minutes). The chosen evaluation metric is accuracy because it is intuitive but also because the variable was engineered to be roughly balanced (50/50). Since no class is more important or prevalent, a specialized metric is not necessary.
 
 
 ### Baseline Model (Logistic Regression)
@@ -157,9 +157,11 @@ The prediction task will be binary classification where the model will predict i
 | **Model** | `LogisticRegression` | Accuracy: 0.597 |
 | **Features** | `PC.REALGSP.STATE`, `U.S._STATE` | |
 
-### Final Model (Random Forest)
+To establish a starting point, I built a baseline logistic regression model to predict whether an outage was long (>620 minutes) or short. Because the class split was roughly balanced, accuracy was used as the metric.
 
-To significantly improve prediction accuracy, I made a binary classifier predicing whether an outage would be long (greater than 620 minutes) or short (620 minutes or less). This evaluation metric chosen was accuracy because the output classes were engineering to be roughly balanced between long or short outages.
+The model used only two simple inputs: per-capita state economic output (PC.REALGSP.STATE) and state identity (one-hot encoded). After a standard train/test split and basic preprocessing, the model reached 0.597 accuracy. This is slightly better than chance but shows that these features alone capture little of the complexity behind outage duration. The result provides a reference point for evaluating more advanced models later.
+
+### Final Model (Random Forest)
 
 The baseline model, which employed logistic regression, achieved an accuracy of 0.597, indicating that basic features have limited predicting power and were possibly underfitting. To improve performance, I shifted to a Random Forest classifier capable of capturing complex non-linear relationships in the data.
 
