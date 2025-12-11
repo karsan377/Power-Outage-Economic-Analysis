@@ -70,7 +70,7 @@ The first graph depicts the distribution of outage durations across all recorded
 
 ### NMAR Analysis
 
-The column `OUTAGE.RESTORATION.TIME` is hypothesized to be **Not Missing At Random (NMAR)**. The missingness is likely dependent on the value itself because long or complex outages that require tedious documentation procedures are harder for utility companies to record accurately. It is possible that the reporting entities omit the restoration time due to the complexity of the event.
+The column `OUTAGE.RESTORATION.TIME` is hypothesized to be **Not Missing At Random (NMAR)**. The missingness is likely dependent on the value itself because long or complex outages that require tedious documentation procedures are harder for utility companies to record accurately. It is possible that the reporting entities omit the restoration time because of the difficulty of doing so.
 
 * **Data to Test NMAR:** To investigate if this column is MAR instead of NMAR, one could collect **report logs** or **utility company documentation protocols** that could explain the missingness by factors other than the outage time itself.
 
@@ -119,7 +119,7 @@ I conducted two permutation tests to determine if the missingness of the `RES.PR
   frameborder="0"
 ></iframe>
 
-The plot confirms the dependency, showing that the percentage of missing `RES.PRICE` data increases sharply in the later years of the dataset (post-2-15).
+The plot confirms the dependency, showing that the percentage of missing `RES.PRICE` data increases sharply in the later years of the dataset (post 2015).
 
 ---
 
