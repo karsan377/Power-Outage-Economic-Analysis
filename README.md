@@ -147,8 +147,8 @@ With a p-value well below the 0.05 threshold, we **reject the null hypothesis**.
 
 ### Framing the Prediction Problem
 
-* **Prediction Task:** Binary Classification—predicting `LONG_OUTAGE` (outage > 620 minutes) vs. Short Outage (outage ≤ 620 minutes).
-* **Evaluation Metric:** Accuracy. Chosen because the response variable was engineered to be roughly balanced (50/50).
+The prediction task will be binary classification where the model will predict if a given outage is `LONG_OUTAGE` (outage > 620 minutes) vs. Short Outage (outage ≤ 620 minutes). The chosen evaluation metric is accuracy because it is intuitive but also because the variable was engineered to be roughly balanced (50/50).
+
 
 ### Baseline Model (Logistic Regression)
 
