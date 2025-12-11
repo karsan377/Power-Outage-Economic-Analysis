@@ -183,9 +183,7 @@ After developing the final model, I assessed its fairness with respect to econom
 
 ### 1. Hypotheses
 
-* **Groups:** Group X (Lower GSP States, below median) and Group Y (Higher GSP States, at or above median).  
-* **Null Hypothesis (H0):** The model is fair. The true accuracy for Lower GSP states (μX) is the same as for Higher GSP states (μY).  
-* **Alternative Hypothesis (HA):** The model is unfair. The true accuracy for the two groups is different (μX ≠ μY).
+To evaluate fairness, I compared model performance between two groups: lower-GSP states (below the median) and higher-GSP states (at or above the median). The null hypothesis stated that the model is fair, meaning the true accuracy for lower-GSP states is equal to the true accuracy for higher-GSP states. The alternative hypothesis stated that the model is unfair, implying the accuracies differ between the two groups.
 
 The null hypothesis was that the the accuracy for lower GSP states is equal to that of higher GSP states. The alternative hypothesis suggested that the model is unfair, with differing accuracies across both groups.
 
